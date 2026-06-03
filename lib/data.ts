@@ -203,3 +203,25 @@ export async function getCityCount(): Promise<number> {
   const unique = new Set(data.map((r) => `${r.city}-${r.state}`))
   return unique.size
 }
+
+export async function getCitiesByState(state: string): Promise<{ city: string; count: number }[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('tm_listings')
+    .select('city')
+    .eq('state', state.toUpperCase())
+    .eq('is_active', true)
+    .eq('is_approved', true)
+
+  if (error || !data) return []
+
+  const counts: Record<string, number> = {}
+  for (const row of data) {
+    if (row.city) counts[row.city] = (counts[row.city] ?? 0) + 1
+  }
+
+  return Object.entries(counts)
+    .map(([city, count]) => ({ city, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 20)
+}
