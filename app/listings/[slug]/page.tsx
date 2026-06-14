@@ -24,7 +24,7 @@ export async function generateMetadata({
   const attorney = await getListingBySlug(params.slug)
   if (!attorney) return { title: 'Attorney Not Found' }
 
-  const displayName = attorney.firm_name || attorney.name
+  const displayName = attorney.firm_name || attorney.full_name
   const title = `${displayName} — Trademark Attorney in ${attorney.city}, ${attorney.state}`
 
   return {
@@ -50,7 +50,7 @@ export default async function ListingDetailPage({
   })
   const otherAttorneys = similar.filter((a) => a.id !== attorney.id).slice(0, 3)
 
-  const displayName = attorney.firm_name || attorney.name
+  const displayName = attorney.firm_name || attorney.full_name
   const isVerified = attorney.plan_tier === 'verified' || attorney.plan_tier === 'featured'
   const isFeatured = attorney.plan_tier === 'featured'
 
@@ -94,8 +94,8 @@ export default async function ListingDetailPage({
 
               <div className="flex-1">
                 <h1 className="text-2xl font-serif font-bold text-navy-800">{displayName}</h1>
-                {attorney.firm_name && attorney.name !== attorney.firm_name && (
-                  <p className="text-slate-600 mt-0.5">{attorney.name}</p>
+                {attorney.firm_name && attorney.full_name !== attorney.firm_name && (
+                  <p className="text-slate-600 mt-0.5">{attorney.full_name}</p>
                 )}
                 <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                   <div className="flex items-center gap-1 text-sm text-slate-500">
@@ -143,11 +143,11 @@ export default async function ListingDetailPage({
               </div>
             )}
 
-            {attorney.practice_areas && attorney.practice_areas.length > 0 && (
+            {attorney.areas_of_practice && attorney.areas_of_practice.length > 0 && (
               <div className="mt-4">
-                <h2 className="font-semibold text-navy-800 mb-2">Practice Areas</h2>
+                <h2 className="font-semibold text-navy-800 mb-2">Areas of Practice</h2>
                 <div className="flex flex-wrap gap-2">
-                  {attorney.practice_areas.map((a) => (
+                  {attorney.areas_of_practice.map((a) => (
                     <span
                       key={a}
                       className="text-sm bg-slate-50 text-slate-600 px-3 py-1 rounded-full border border-slate-200"
@@ -161,17 +161,31 @@ export default async function ListingDetailPage({
           </div>
 
           {/* Bar info */}
-          {attorney.bar_number && (
+          {(attorney.bar_state || attorney.bar_number || attorney.law_school) && (
             <div className="bg-white rounded-2xl border border-slate-200 shadow-soft p-6">
               <h2 className="font-semibold text-navy-800 mb-4 flex items-center gap-2">
                 <Scale className="w-4 h-4 text-navy-500" />
-                USPTO Registration
+                Bar Admission & Education
               </h2>
               <dl className="space-y-3 text-sm">
-                <div className="flex gap-4">
-                  <dt className="text-slate-500 w-32 flex-shrink-0">Registration #</dt>
-                  <dd className="text-slate-700 font-medium">{attorney.bar_number}</dd>
-                </div>
+                {attorney.bar_state && (
+                  <div className="flex gap-4">
+                    <dt className="text-slate-500 w-32 flex-shrink-0">Bar State</dt>
+                    <dd className="text-slate-700 font-medium">{attorney.bar_state}</dd>
+                  </div>
+                )}
+                {attorney.bar_number && (
+                  <div className="flex gap-4">
+                    <dt className="text-slate-500 w-32 flex-shrink-0">Bar Number</dt>
+                    <dd className="text-slate-700 font-medium">{attorney.bar_number}</dd>
+                  </div>
+                )}
+                {attorney.law_school && (
+                  <div className="flex gap-4">
+                    <dt className="text-slate-500 w-32 flex-shrink-0">Law School</dt>
+                    <dd className="text-slate-700 font-medium">{attorney.law_school}</dd>
+                  </div>
+                )}
               </dl>
             </div>
           )}
