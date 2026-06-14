@@ -2,38 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  html {
-    font-family: Inter, system-ui, sans-serif;
-  }
-  body {
-    @apply bg-surface text-gray-900 antialiased;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --navy: #1B2C4F;
+  --gold: #C9A227;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: #F7F8FA;
+  color: #1A202C;
 }
 
 @layer components {
-  .badge-verified {
-    @apply inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-brand-sage/10 text-brand-sage border border-brand-sage/20;
-  }
-  .badge-featured {
-    @apply inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-brand-amber/10 text-brand-amber border border-brand-amber/20;
-  }
-  .badge-free {
-    @apply inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-500;
-  }
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-brand-amber hover:bg-brand-amber-dark text-white font-semibold rounded-lg transition-colors text-sm;
+    @apply bg-navy-600 hover:bg-navy-500 text-white font-semibold px-6 py-3 rounded-xl transition-colors;
   }
-  .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-brand-indigo hover:bg-brand-indigo-dark text-white font-semibold rounded-lg transition-colors text-sm;
-  }
-  .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 border border-surface-border hover:border-brand-indigo text-gray-700 hover:text-brand-indigo font-semibold rounded-lg transition-colors text-sm;
+  .btn-gold {
+    @apply bg-gold-500 hover:bg-gold-400 text-navy-800 font-semibold px-6 py-3 rounded-xl transition-colors;
   }
   .card {
-    @apply bg-surface-card border border-surface-border rounded-xl;
-  }
-  .prose-guide {
-    @apply prose prose-gray max-w-none prose-headings:text-brand-indigo prose-a:text-brand-amber hover:prose-a:text-brand-amber-dark;
+    @apply bg-white rounded-2xl border border-slate-200 shadow-soft;
   }
 }
