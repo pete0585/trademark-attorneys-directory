@@ -1,14 +1,15 @@
 import { createClient } from './supabase/server'
 import type { TrademarkAttorney } from '@/lib/types'
 
-const TABLE = 'trademark_attorneys_listings'
+const TABLE = 'trademark_attorney_listings'
 
 export async function getTotalCount(): Promise<number> {
   const supabase = await createClient()
   const { count } = await supabase
     .from(TABLE)
     .select('*', { count: 'exact', head: true })
-    .eq('status', 'active')
+    .eq('is_active', true)
+    .eq('is_approved', true)
   return count ?? 0
 }
 
@@ -26,21 +27,22 @@ export async function getListings({
   search?: string
   page?: number
   pageSize?: number
-} = {}): Promise<{ listings: TrademarkAttorney[]; total: number }> {
+}): Promise<{ listings: TrademarkAttorney[]; total: number }> {
   const supabase = await createClient()
   let query = supabase
     .from(TABLE)
     .select('*', { count: 'exact' })
-    .eq('status', 'active')
-    .order('plan_tier_rank', { ascending: false, nullsFirst: false })
-    .order('name', { ascending: true })
+    .eq('is_active', true)
+    .eq('is_approved', true)
+    .order('listing_tier_rank', { ascending: true })
+    .order('full_name', { ascending: true })
 
   if (state) query = query.ilike('state', state)
   if (city) query = query.ilike('city', city)
   if (specialty) query = query.contains('specialties', [specialty])
   if (search) {
     query = query.or(
-      `name.ilike.%${search}%,firm_name.ilike.%${search}%,city.ilike.%${search}%,state.ilike.%${search}%`,
+      `full_name.ilike.%${search}%,firm_name.ilike.%${search}%,city.ilike.%${search}%,state.ilike.%${search}%`,
     )
   }
 
@@ -49,7 +51,7 @@ export async function getListings({
   query = query.range(from, to)
 
   const { data, count } = await query
-  return { listings: (data as TrademarkAttorney[]) ?? [], total: count ?? 0 }
+  return { listings: data ?? [], total: count ?? 0 }
 }
 
 export async function getListingBySlug(slug: string): Promise<TrademarkAttorney | null> {
@@ -58,19 +60,9 @@ export async function getListingBySlug(slug: string): Promise<TrademarkAttorney 
     .from(TABLE)
     .select('*')
     .eq('slug', slug)
-    .eq('status', 'active')
+    .eq('is_active', true)
     .single()
-  return data as TrademarkAttorney | null
-}
-
-export async function getListingById(id: string): Promise<TrademarkAttorney | null> {
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from(TABLE)
-    .select('*')
-    .eq('id', id)
-    .single()
-  return data as TrademarkAttorney | null
+  return data
 }
 
 export async function getFeaturedListings(limit = 6): Promise<TrademarkAttorney[]> {
@@ -78,11 +70,12 @@ export async function getFeaturedListings(limit = 6): Promise<TrademarkAttorney[
   const { data } = await supabase
     .from(TABLE)
     .select('*')
-    .eq('status', 'active')
+    .eq('is_active', true)
+    .eq('is_approved', true)
     .in('plan_tier', ['verified', 'featured'])
-    .order('plan_tier_rank', { ascending: false, nullsFirst: false })
+    .order('listing_tier_rank', { ascending: true })
     .limit(limit)
-  return (data as TrademarkAttorney[]) ?? []
+  return data ?? []
 }
 
 export async function getListingsByState(
@@ -94,10 +87,11 @@ export async function getListingsByState(
     .from(TABLE)
     .select('*')
     .ilike('state', state)
-    .eq('status', 'active')
-    .order('plan_tier_rank', { ascending: false, nullsFirst: false })
+    .eq('is_active', true)
+    .eq('is_approved', true)
+    .order('listing_tier_rank', { ascending: true })
     .limit(limit)
-  return (data as TrademarkAttorney[]) ?? []
+  return data ?? []
 }
 
 export async function getActiveStates(): Promise<string[]> {
@@ -105,7 +99,8 @@ export async function getActiveStates(): Promise<string[]> {
   const { data } = await supabase
     .from(TABLE)
     .select('state')
-    .eq('status', 'active')
+    .eq('is_active', true)
+    .eq('is_approved', true)
   const states = Array.from(
     new Set((data ?? []).map((r: { state: string }) => r.state).filter(Boolean)),
   ).sort()
@@ -117,6 +112,7 @@ export async function getAllSlugs(): Promise<string[]> {
   const { data } = await supabase
     .from(TABLE)
     .select('slug')
-    .eq('status', 'active')
+    .eq('is_active', true)
+    .eq('is_approved', true)
   return (data ?? []).map((r: { slug: string }) => r.slug)
 }
