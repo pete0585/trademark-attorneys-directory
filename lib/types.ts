@@ -1,9 +1,8 @@
-export interface Listing {
+export interface TrademarkAttorney {
   id: string
   slug: string
-  name: string
+  full_name: string
   firm_name: string | null
-  practitioner_type: string
   bio: string | null
   photo_url: string | null
   phone: string | null
@@ -13,65 +12,35 @@ export interface Listing {
   city: string
   state: string
   zip: string | null
-  latitude: number | null
-  longitude: number | null
+  lat: number | null
+  lng: number | null
   bar_number: string | null
-  bar_admissions: string[]
-  practice_areas: string[]
+  bar_state: string | null
+  law_school: string | null
+  areas_of_practice: string[]
   specialties: string[]
   languages: string[]
+  telehealth: boolean
   accepting_new_clients: boolean
-  free_consultation: boolean
-  years_experience: number | null
-  credential_verified: boolean
+  practitioner_type: string
   plan_tier: 'free' | 'verified' | 'featured'
-  plan_tier_rank: number | null
-  plan_expires_at: string | null
+  listing_tier: 'unclaimed' | 'claimed' | 'verified' | 'featured'
+  listing_tier_rank: number
+  is_active: boolean
+  is_approved: boolean
   claimed: boolean
   claimed_at: string | null
   stripe_customer_id: string | null
-  status: string
-  do_not_email: boolean
-  email_source: string | null
-  outreach_step: number
-  outreach_last_sent_at: string | null
-  upgrade_nudge_step: number
-  upgrade_nudge_sent_at: string | null
-  search_vector: string | null
+  plan_expires_at: string | null
+  source: string | null
   created_at: string
   updated_at: string
 }
 
-export interface SearchFilters {
-  q?: string
+export interface SearchParams {
   state?: string
-  practice_area?: string
-  creator_type?: string
-  flat_fee?: boolean
-  virtual?: boolean
-  tier?: string
+  city?: string
+  specialty?: string
+  search?: string
   page?: number
-}
-
-export interface Claim {
-  id: string
-  listing_id: string
-  email: string
-  token: string
-  verified: boolean
-  verified_at: string | null
-  expires_at: string
-  nudge_sent_at: string | null
-  created_at: string
-}
-
-export interface Payment {
-  id: string
-  listing_id: string
-  stripe_session_id: string | null
-  stripe_payment_intent_id: string | null
-  amount: number | null
-  tier: string | null
-  status: string | null
-  created_at: string
 }
