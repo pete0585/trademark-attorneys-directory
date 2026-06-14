@@ -33,7 +33,7 @@ const GUIDES: Record<string, Guide> = {
     metaDescription:
       'Understand what trademark registration protects, why it matters for creators and small businesses, and how the USPTO application process works.',
     intro:
-      'You built a brand. You named it, designed it, and put it out into the world. Trademark registration is the legal step that says: this is mine, and I can prove it. For creators and business owners, understanding what trademark registration actually does — and doesn't do — is the difference between a brand with teeth and one that can be copied the moment it gets any traction.',
+      'You built a brand. You named it, designed it, and put it out into the world. Trademark registration is the legal step that says: this is mine, and I can prove it. For creators and business owners, understanding what trademark registration actually does — and doesn’t do — is the difference between a brand with teeth and one that can be copied the moment it gets any traction.',
     sections: [
       {
         h2: 'What a Trademark Actually Protects',
