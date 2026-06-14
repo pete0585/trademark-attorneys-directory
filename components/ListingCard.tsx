@@ -10,7 +10,7 @@ interface ListingCardProps {
 export default function ListingCard({ attorney }: ListingCardProps) {
   const isFeatured = attorney.plan_tier === 'featured'
   const isVerified = attorney.plan_tier === 'verified' || isFeatured
-  const displayName = attorney.firm_name || attorney.full_name
+  const displayName = attorney.firm_name || attorney.name
 
   return (
     <Link
@@ -49,8 +49,8 @@ export default function ListingCard({ attorney }: ListingCardProps) {
             <h3 className="font-semibold text-navy-800 group-hover:text-navy-600 truncate">
               {displayName}
             </h3>
-            {attorney.firm_name && attorney.full_name !== attorney.firm_name && (
-              <p className="text-sm text-slate-500 truncate">{attorney.full_name}</p>
+            {attorney.firm_name && attorney.name !== attorney.firm_name && (
+              <p className="text-sm text-slate-500 truncate">{attorney.name}</p>
             )}
             {isVerified && (
               <div className="flex items-center gap-1 mt-0.5">
