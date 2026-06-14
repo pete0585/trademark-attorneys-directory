@@ -121,6 +121,39 @@ export async function getAllSlugs(): Promise<string[]> {
   return (data ?? []).map((r: { slug: string }) => r.slug)
 }
 
+export async function getCitiesByState(
+  state: string,
+  limit = 20,
+): Promise<string[]> {
+  const supabase = createPublicClient()
+  const { data } = await supabase
+    .from(TABLE)
+    .select('city')
+    .ilike('state', state)
+    .eq('status', 'active')
+  const cities = Array.from(
+    new Set((data ?? []).map((r: { city: string }) => r.city).filter(Boolean)),
+  ).sort()
+  return (cities as string[]).slice(0, limit)
+}
+
+export async function getListingsByCity(
+  city: string,
+  state: string,
+  limit = 24,
+): Promise<TrademarkAttorney[]> {
+  const supabase = createPublicClient()
+  const { data } = await supabase
+    .from(TABLE)
+    .select('*')
+    .ilike('city', city)
+    .ilike('state', state)
+    .eq('status', 'active')
+    .order('plan_tier_rank', { ascending: false, nullsFirst: false })
+    .limit(limit)
+  return (data as TrademarkAttorney[]) ?? []
+}
+
 // Map creator type slugs to specialty keywords for filtering
 const CREATOR_TYPE_SPECIALTIES: Record<string, string> = {
   small_business: 'Small Business',
