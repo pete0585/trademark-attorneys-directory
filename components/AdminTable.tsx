@@ -15,16 +15,16 @@ export default function AdminTable({ listings }: Props) {
 
   async function approve(id: string) {
     await supabase
-      .from('tm_listings')
-      .update({ is_approved: true, updated_at: new Date().toISOString() })
+      .from('trademark_attorneys_listings')
+      .update({ credential_verified: true, updated_at: new Date().toISOString() })
       .eq('id', id)
     setRows((prev) => prev.filter((r) => r.id !== id))
   }
 
   async function reject(id: string) {
     await supabase
-      .from('tm_listings')
-      .update({ is_active: false, updated_at: new Date().toISOString() })
+      .from('trademark_attorneys_listings')
+      .update({ status: 'inactive', updated_at: new Date().toISOString() })
       .eq('id', id)
     setRows((prev) => prev.filter((r) => r.id !== id))
   }
@@ -40,7 +40,7 @@ export default function AdminTable({ listings }: Props) {
           <tr className="border-b border-surface-border text-left">
             <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Name</th>
             <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Location</th>
-            <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Source</th>
+            <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Status</th>
             <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Submitted</th>
             <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Actions</th>
           </tr>
@@ -49,15 +49,15 @@ export default function AdminTable({ listings }: Props) {
           {rows.map((listing) => (
             <tr key={listing.id} className="hover:bg-surface/50">
               <td className="px-4 py-3">
-                <div className="font-medium text-gray-900">{listing.full_name}</div>
-                {listing.law_firm_name && (
-                  <div className="text-xs text-gray-500">{listing.law_firm_name}</div>
+                <div className="font-medium text-gray-900">{listing.name}</div>
+                {listing.firm_name && (
+                  <div className="text-xs text-gray-500">{listing.firm_name}</div>
                 )}
               </td>
               <td className="px-4 py-3 text-gray-600">
                 {listing.city}, {listing.state}
               </td>
-              <td className="px-4 py-3 text-gray-500 text-xs">{listing.source ?? '—'}</td>
+              <td className="px-4 py-3 text-gray-500 text-xs">{listing.status}</td>
               <td className="px-4 py-3 text-gray-500 text-xs">
                 {new Date(listing.created_at).toLocaleDateString()}
               </td>
@@ -68,7 +68,7 @@ export default function AdminTable({ listings }: Props) {
                     className="flex items-center gap-1 text-xs text-brand-sage hover:text-brand-sage-light font-medium"
                   >
                     <CheckCircle className="w-4 h-4" aria-label="Approve" />
-                    Approve
+                    Verify
                   </button>
                   <button
                     onClick={() => reject(listing.id)}

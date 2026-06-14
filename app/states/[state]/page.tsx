@@ -93,7 +93,7 @@ export default async function StatePage({ params }: Props) {
     getCitiesByState(abbr),
   ])
 
-  const featured = listings.filter((l) => l.listing_tier === 'featured').slice(0, 3)
+  const featured = listings.filter((l) => l.plan_tier === 'featured').slice(0, 3)
   const cityBreakdown = cities.slice(0, 10)
 
   return (

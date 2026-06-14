@@ -10,8 +10,8 @@ interface Props {
 }
 
 export default function ListingCard({ listing, horizontal }: Props) {
-  const isPaid = listing.listing_tier === 'verified' || listing.listing_tier === 'featured'
-  const isFeatured = listing.listing_tier === 'featured'
+  const isPaid = listing.plan_tier === 'verified' || listing.plan_tier === 'featured'
+  const isFeatured = listing.plan_tier === 'featured'
 
   if (horizontal) {
     return (
@@ -26,7 +26,7 @@ export default function ListingCard({ listing, horizontal }: Props) {
           {listing.photo_url ? (
             <Image
               src={listing.photo_url}
-              alt={listing.full_name}
+              alt={listing.name}
               width={64}
               height={64}
               className="w-16 h-16 rounded-lg object-cover shrink-0"
@@ -34,7 +34,7 @@ export default function ListingCard({ listing, horizontal }: Props) {
           ) : (
             <div className="w-16 h-16 rounded-lg bg-brand-indigo/10 flex items-center justify-center shrink-0">
               <span className="text-xl font-bold text-brand-indigo">
-                {listing.full_name.charAt(0)}
+                {listing.name.charAt(0)}
               </span>
             </div>
           )}
@@ -44,13 +44,13 @@ export default function ListingCard({ listing, horizontal }: Props) {
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <h3 className="font-semibold text-gray-900 hover:text-brand-indigo text-sm sm:text-base">
-                    {listing.full_name}
+                    {listing.name}
                   </h3>
                   {isFeatured && <span className="badge-featured">Featured</span>}
                   {!isFeatured && isPaid && <span className="badge-verified"><CheckCircle className="w-3 h-3" aria-label="Verified" /> Verified</span>}
                 </div>
-                {listing.law_firm_name && (
-                  <p className="text-sm text-gray-500 mt-0.5">{listing.law_firm_name}</p>
+                {listing.firm_name && (
+                  <p className="text-sm text-gray-500 mt-0.5">{listing.firm_name}</p>
                 )}
               </div>
             </div>
@@ -72,13 +72,13 @@ export default function ListingCard({ listing, horizontal }: Props) {
                   {listing.phone}
                 </span>
               )}
-              {listing.flat_fee_filings && (
+              {listing.free_consultation && (
                 <span className="flex items-center gap-1 text-brand-sage font-medium">
                   <Star className="w-3.5 h-3.5" aria-label="Flat fee" />
                   Flat Fee
                 </span>
               )}
-              {listing.virtual_consult && (
+              {listing.accepting_new_clients && (
                 <span className="flex items-center gap-1 text-brand-indigo font-medium">
                   <Laptop className="w-3.5 h-3.5" aria-label="Virtual" />
                   Virtual
@@ -96,9 +96,9 @@ export default function ListingCard({ listing, horizontal }: Props) {
               </div>
             )}
 
-            {listing.creator_types.length > 0 && (
+            {listing.specialties.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mt-1">
-                {listing.creator_types.slice(0, 2).map((ct) => (
+                {listing.specialties.slice(0, 2).map((ct) => (
                   <span key={ct} className="text-xs bg-brand-amber/5 text-brand-amber-dark px-2 py-0.5 rounded-full">
                     <Briefcase className="w-3 h-3 inline mr-0.5" aria-label="Creator type" />
                     {CREATOR_TYPES[ct] ?? ct}
@@ -124,7 +124,7 @@ export default function ListingCard({ listing, horizontal }: Props) {
         {listing.photo_url ? (
           <Image
             src={listing.photo_url}
-            alt={listing.full_name}
+            alt={listing.name}
             width={48}
             height={48}
             className="w-12 h-12 rounded-lg object-cover shrink-0"
@@ -132,7 +132,7 @@ export default function ListingCard({ listing, horizontal }: Props) {
         ) : (
           <div className="w-12 h-12 rounded-lg bg-brand-indigo/10 flex items-center justify-center shrink-0">
             <span className="text-lg font-bold text-brand-indigo">
-              {listing.full_name.charAt(0)}
+              {listing.name.charAt(0)}
             </span>
           </div>
         )}
@@ -141,9 +141,9 @@ export default function ListingCard({ listing, horizontal }: Props) {
             {isFeatured && <span className="badge-featured">Featured</span>}
             {!isFeatured && isPaid && <span className="badge-verified"><CheckCircle className="w-3 h-3" aria-label="Verified" /> Verified</span>}
           </div>
-          <h3 className="font-semibold text-gray-900 text-sm leading-tight">{listing.full_name}</h3>
-          {listing.law_firm_name && (
-            <p className="text-xs text-gray-500">{listing.law_firm_name}</p>
+          <h3 className="font-semibold text-gray-900 text-sm leading-tight">{listing.name}</h3>
+          {listing.firm_name && (
+            <p className="text-xs text-gray-500">{listing.firm_name}</p>
           )}
         </div>
       </div>
@@ -151,7 +151,7 @@ export default function ListingCard({ listing, horizontal }: Props) {
       <div className="flex items-center gap-1.5 text-xs text-gray-500 mb-2">
         <MapPin className="w-3.5 h-3.5" aria-label="Location" />
         {listing.city}, {listing.state}
-        {listing.flat_fee_filings && (
+        {listing.free_consultation && (
           <span className="ml-auto text-brand-sage font-medium flex items-center gap-0.5">
             <Star className="w-3 h-3" aria-label="Flat fee" /> Flat Fee
           </span>

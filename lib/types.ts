@@ -1,39 +1,42 @@
 export interface Listing {
   id: string
   slug: string
-  full_name: string
-  law_firm_name: string | null
-  uspto_registration_number: string | null
-  registration_date: string | null
+  name: string
+  firm_name: string | null
+  practitioner_type: string
   bio: string | null
   photo_url: string | null
   phone: string | null
   email: string | null
   website: string | null
-  address_line1: string | null
+  address: string | null
   city: string
   state: string
   zip: string | null
   latitude: number | null
   longitude: number | null
+  bar_number: string | null
+  bar_admissions: string[]
   practice_areas: string[]
-  creator_types: string[]
-  flat_fee_filings: boolean
-  virtual_consult: boolean
+  specialties: string[]
   languages: string[]
-  listing_tier: 'free' | 'verified' | 'featured'
-  is_active: boolean
-  is_approved: boolean
-  stripe_customer_id: string | null
-  stripe_subscription_id: string | null
-  subscription_expires_at: string | null
+  accepting_new_clients: boolean
+  free_consultation: boolean
+  years_experience: number | null
+  credential_verified: boolean
+  plan_tier: 'free' | 'verified' | 'featured'
+  plan_tier_rank: number | null
+  plan_expires_at: string | null
+  claimed: boolean
   claimed_at: string | null
-  claimed_by: string | null
-  outreach_step: number
-  outreach_sent_at: string | null
-  source: string | null
+  stripe_customer_id: string | null
+  status: string
   do_not_email: boolean
   email_source: string | null
+  outreach_step: number
+  outreach_last_sent_at: string | null
+  upgrade_nudge_step: number
+  upgrade_nudge_sent_at: string | null
   search_vector: string | null
   created_at: string
   updated_at: string

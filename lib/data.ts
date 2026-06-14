@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import type { Listing, SearchFilters } from '@/lib/types'
 
 const PAGE_SIZE = 20
+const TABLE = 'trademark_attorneys_listings'
 
 export async function getListings(filters: SearchFilters = {}): Promise<{ listings: Listing[]; total: number }> {
   const supabase = await createClient()
@@ -9,16 +10,15 @@ export async function getListings(filters: SearchFilters = {}): Promise<{ listin
   const offset = (page - 1) * PAGE_SIZE
 
   let query = supabase
-    .from('tm_listings')
+    .from(TABLE)
     .select('*', { count: 'exact' })
-    .eq('is_active', true)
-    .eq('is_approved', true)
-    .order('listing_tier', { ascending: false })
-    .order('full_name', { ascending: true })
+    .eq('status', 'active')
+    .order('plan_tier_rank', { ascending: false, nullsFirst: false })
+    .order('name', { ascending: true })
     .range(offset, offset + PAGE_SIZE - 1)
 
   if (q) {
-    query = query.or(`full_name.ilike.%${q}%,law_firm_name.ilike.%${q}%,city.ilike.%${q}%`)
+    query = query.or(`name.ilike.%${q}%,firm_name.ilike.%${q}%,city.ilike.%${q}%`)
   }
   if (state) {
     query = query.eq('state', state.toUpperCase())
@@ -27,16 +27,16 @@ export async function getListings(filters: SearchFilters = {}): Promise<{ listin
     query = query.contains('practice_areas', [practice_area])
   }
   if (creator_type) {
-    query = query.contains('creator_types', [creator_type])
+    query = query.contains('specialties', [creator_type])
   }
   if (flat_fee) {
-    query = query.eq('flat_fee_filings', true)
+    query = query.eq('free_consultation', true)
   }
   if (virtual) {
-    query = query.eq('virtual_consult', true)
+    query = query.eq('accepting_new_clients', true)
   }
   if (tier) {
-    query = query.eq('listing_tier', tier)
+    query = query.eq('plan_tier', tier)
   }
 
   const { data, count, error } = await query
@@ -49,10 +49,10 @@ export async function getListings(filters: SearchFilters = {}): Promise<{ listin
 export async function getListingBySlug(slug: string): Promise<Listing | null> {
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('tm_listings')
+    .from(TABLE)
     .select('*')
     .eq('slug', slug)
-    .eq('is_active', true)
+    .eq('status', 'active')
     .single()
 
   if (error) return null
@@ -62,7 +62,7 @@ export async function getListingBySlug(slug: string): Promise<Listing | null> {
 export async function getListingById(id: string): Promise<Listing | null> {
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('tm_listings')
+    .from(TABLE)
     .select('*')
     .eq('id', id)
     .single()
@@ -74,13 +74,12 @@ export async function getListingById(id: string): Promise<Listing | null> {
 export async function getListingsByState(state: string): Promise<Listing[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('tm_listings')
+    .from(TABLE)
     .select('*')
     .eq('state', state.toUpperCase())
-    .eq('is_active', true)
-    .eq('is_approved', true)
-    .order('listing_tier', { ascending: false })
-    .order('full_name', { ascending: true })
+    .eq('status', 'active')
+    .order('plan_tier_rank', { ascending: false, nullsFirst: false })
+    .order('name', { ascending: true })
     .limit(50)
 
   if (error) return []
@@ -90,12 +89,11 @@ export async function getListingsByState(state: string): Promise<Listing[]> {
 export async function getListingsByCreatorType(creatorType: string): Promise<Listing[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('tm_listings')
+    .from(TABLE)
     .select('*')
-    .contains('creator_types', [creatorType])
-    .eq('is_active', true)
-    .eq('is_approved', true)
-    .order('listing_tier', { ascending: false })
+    .contains('specialties', [creatorType])
+    .eq('status', 'active')
+    .order('plan_tier_rank', { ascending: false, nullsFirst: false })
     .limit(50)
 
   if (error) return []
@@ -105,12 +103,11 @@ export async function getListingsByCreatorType(creatorType: string): Promise<Lis
 export async function getFeaturedListings(): Promise<Listing[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('tm_listings')
+    .from(TABLE)
     .select('*')
-    .eq('listing_tier', 'featured')
-    .eq('is_active', true)
-    .eq('is_approved', true)
-    .order('full_name', { ascending: true })
+    .eq('plan_tier', 'featured')
+    .eq('status', 'active')
+    .order('name', { ascending: true })
     .limit(6)
 
   if (error) return []
@@ -120,10 +117,9 @@ export async function getFeaturedListings(): Promise<Listing[]> {
 export async function getRecentListings(): Promise<Listing[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('tm_listings')
+    .from(TABLE)
     .select('*')
-    .eq('is_active', true)
-    .eq('is_approved', true)
+    .eq('status', 'active')
     .order('created_at', { ascending: false })
     .limit(8)
 
@@ -134,10 +130,9 @@ export async function getRecentListings(): Promise<Listing[]> {
 export async function getTotalCount(): Promise<number> {
   const supabase = await createClient()
   const { count, error } = await supabase
-    .from('tm_listings')
+    .from(TABLE)
     .select('*', { count: 'exact', head: true })
-    .eq('is_active', true)
-    .eq('is_approved', true)
+    .eq('status', 'active')
 
   if (error) return 0
   return count ?? 0
@@ -146,10 +141,9 @@ export async function getTotalCount(): Promise<number> {
 export async function getStateCounts(): Promise<{ state: string; count: number }[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('tm_listings')
+    .from(TABLE)
     .select('state')
-    .eq('is_active', true)
-    .eq('is_approved', true)
+    .eq('status', 'active')
 
   if (error || !data) return []
 
@@ -166,10 +160,9 @@ export async function getStateCounts(): Promise<{ state: string; count: number }
 export async function getAllSlugs(): Promise<string[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('tm_listings')
+    .from(TABLE)
     .select('slug')
-    .eq('is_active', true)
-    .eq('is_approved', true)
+    .eq('status', 'active')
 
   if (error) return []
   return data?.map((r) => r.slug) ?? []
@@ -178,13 +171,12 @@ export async function getAllSlugs(): Promise<string[]> {
 export async function getListingsByCity(city: string, state: string): Promise<Listing[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('tm_listings')
+    .from(TABLE)
     .select('*')
     .ilike('city', city)
     .eq('state', state.toUpperCase())
-    .eq('is_active', true)
-    .eq('is_approved', true)
-    .order('listing_tier', { ascending: false })
+    .eq('status', 'active')
+    .order('plan_tier_rank', { ascending: false, nullsFirst: false })
     .limit(30)
 
   if (error) return []
@@ -194,10 +186,9 @@ export async function getListingsByCity(city: string, state: string): Promise<Li
 export async function getCityCount(): Promise<number> {
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('tm_listings')
+    .from(TABLE)
     .select('city, state')
-    .eq('is_active', true)
-    .eq('is_approved', true)
+    .eq('status', 'active')
 
   if (error || !data) return 0
   const unique = new Set(data.map((r) => `${r.city}-${r.state}`))
@@ -207,11 +198,10 @@ export async function getCityCount(): Promise<number> {
 export async function getCitiesByState(state: string): Promise<{ city: string; count: number }[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('tm_listings')
+    .from(TABLE)
     .select('city')
     .eq('state', state.toUpperCase())
-    .eq('is_active', true)
-    .eq('is_approved', true)
+    .eq('status', 'active')
 
   if (error || !data) return []
 

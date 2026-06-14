@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   const supabase = await createServiceClient()
 
   const { data: claim, error } = await supabase
-    .from('tm_claims')
+    .from('trademark_attorneys_claims')
     .select('*')
     .eq('listing_id', listingId)
     .eq('token', token)
@@ -26,13 +26,13 @@ export async function GET(req: NextRequest) {
   }
 
   await supabase
-    .from('tm_claims')
+    .from('trademark_attorneys_claims')
     .update({ verified: true, verified_at: new Date().toISOString() })
     .eq('id', claim.id)
 
   await supabase
-    .from('tm_listings')
-    .update({ claimed_at: new Date().toISOString(), claimed_by: claim.email })
+    .from('trademark_attorneys_listings')
+    .update({ claimed: true, claimed_at: new Date().toISOString() })
     .eq('id', listingId)
 
   return NextResponse.redirect(new URL(`/claim/${listingId}?action=verify&token=${token}`, req.url))

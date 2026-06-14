@@ -14,8 +14,8 @@ export async function POST(req: NextRequest) {
   const supabase = await createServiceClient()
 
   const { data: listing } = await supabase
-    .from('tm_listings')
-    .select('id, full_name, slug')
+    .from('trademark_attorneys_listings')
+    .select('id, name, slug')
     .eq('id', listingId)
     .single()
 
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
   const token = randomBytes(32).toString('hex')
   const expiresAt = new Date(Date.now() + 72 * 60 * 60 * 1000).toISOString()
 
-  await supabase.from('tm_claims').insert({
+  await supabase.from('trademark_attorneys_claims').insert({
     listing_id: listingId,
     email,
     token,
@@ -36,15 +36,14 @@ export async function POST(req: NextRequest) {
 
   const verifyUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/claim/${listingId}?token=${token}&action=verify`
 
-  // Send via Resend
   const emailBody = JSON.stringify({
     from: 'FindTrademarkAttorney.com <noreply@findtrademarkattorney.com>',
     to: [email],
-    subject: `Verify your claim for ${listing.full_name}`,
+    subject: `Verify your claim for ${listing.name}`,
     html: `
       <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 24px;">
         <h2 style="color: #2C3E7A;">Verify Your Listing Claim</h2>
-        <p>You requested to claim the listing for <strong>${listing.full_name}</strong> on FindTrademarkAttorney.com.</p>
+        <p>You requested to claim the listing for <strong>${listing.name}</strong> on FindTrademarkAttorney.com.</p>
         <p>Click the button below to verify your ownership. This link expires in 72 hours.</p>
         <a href="${verifyUrl}" style="display:inline-block; background:#2C3E7A; color:white; padding:12px 24px; border-radius:6px; text-decoration:none; font-weight:600; margin:16px 0;">
           Verify My Listing

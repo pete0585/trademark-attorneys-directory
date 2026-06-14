@@ -12,11 +12,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const listing = await getListingBySlug(slug)
   if (!listing) return {}
 
-  const title = listing.law_firm_name
-    ? `${listing.full_name} — ${listing.law_firm_name}`
-    : listing.full_name
+  const title = listing.firm_name
+    ? `${listing.name} — ${listing.firm_name}`
+    : listing.name
 
-  const desc = `${listing.full_name} is a USPTO-registered trademark attorney in ${listing.city}, ${listing.state}${listing.law_firm_name ? ` at ${listing.law_firm_name}` : ''}. Find contact info, specialties, and more.`
+  const desc = `${listing.name} is a USPTO-registered trademark attorney in ${listing.city}, ${listing.state}${listing.firm_name ? ` at ${listing.firm_name}` : ''}. Find contact info, specialties, and more.`
 
   return {
     title: `${title} | Trademark Attorney in ${listing.city}, ${listing.state}`,
@@ -41,9 +41,9 @@ export default async function ListingDetailPage({ params }: Props) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': ['Person', 'LegalService'],
-    name: listing.full_name,
+    name: listing.name,
     jobTitle: 'Trademark Attorney',
-    ...(listing.law_firm_name && { worksFor: { '@type': 'LegalService', name: listing.law_firm_name } }),
+    ...(listing.firm_name && { worksFor: { '@type': 'LegalService', name: listing.firm_name } }),
     address: {
       '@type': 'PostalAddress',
       addressLocality: listing.city,

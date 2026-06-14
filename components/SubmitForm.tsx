@@ -8,19 +8,19 @@ import { CheckCircle } from 'lucide-react'
 import { PRACTICE_AREAS, CREATOR_TYPES, STATE_NAMES } from '@/lib/utils'
 
 const schema = z.object({
-  full_name: z.string().min(2, 'Full name is required'),
-  law_firm_name: z.string().optional(),
+  name: z.string().min(2, 'Full name is required'),
+  firm_name: z.string().optional(),
   email: z.string().email('Valid email required'),
   phone: z.string().optional(),
   website: z.string().url('Must be a valid URL (include https://)').optional().or(z.literal('')),
   city: z.string().min(2, 'City is required'),
   state: z.string().length(2, 'Select a state'),
   bio: z.string().max(1000, 'Bio must be 1000 characters or less').optional(),
-  uspto_registration_number: z.string().optional(),
+  bar_number: z.string().optional(),
   practice_areas: z.array(z.string()).optional(),
-  creator_types: z.array(z.string()).optional(),
-  flat_fee_filings: z.boolean().optional(),
-  virtual_consult: z.boolean().optional(),
+  specialties: z.array(z.string()).optional(),
+  free_consultation: z.boolean().optional(),
+  accepting_new_clients: z.boolean().optional(),
 })
 
 type FormData = z.infer<typeof schema>
@@ -37,9 +37,9 @@ export default function SubmitForm() {
     resolver: zodResolver(schema),
     defaultValues: {
       practice_areas: [],
-      creator_types: [],
-      flat_fee_filings: false,
-      virtual_consult: false,
+      specialties: [],
+      free_consultation: false,
+      accepting_new_clients: false,
     },
   })
 
@@ -81,18 +81,18 @@ export default function SubmitForm() {
             Full Name <span className="text-red-500">*</span>
           </label>
           <input
-            {...register('full_name')}
+            {...register('name')}
             type="text"
             placeholder="Jane Smith"
             className="w-full px-3 py-2.5 border border-surface-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-indigo"
           />
-          {errors.full_name && <p className="text-red-500 text-xs mt-1">{errors.full_name.message}</p>}
+          {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Law Firm Name</label>
           <input
-            {...register('law_firm_name')}
+            {...register('firm_name')}
             type="text"
             placeholder="Smith IP Law"
             className="w-full px-3 py-2.5 border border-surface-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-indigo"
@@ -170,7 +170,7 @@ export default function SubmitForm() {
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">USPTO Registration Number</label>
         <input
-          {...register('uspto_registration_number')}
+          {...register('bar_number')}
           type="text"
           placeholder="12345"
           className="w-full px-3 py-2.5 border border-surface-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-indigo"
@@ -214,7 +214,7 @@ export default function SubmitForm() {
               <input
                 type="checkbox"
                 value={key}
-                {...register('creator_types')}
+                {...register('specialties')}
                 className="w-4 h-4 rounded border-surface-border text-brand-amber focus:ring-brand-amber"
               />
               {label}
@@ -227,7 +227,7 @@ export default function SubmitForm() {
         <label className="flex items-center gap-3 cursor-pointer">
           <input
             type="checkbox"
-            {...register('flat_fee_filings')}
+            {...register('free_consultation')}
             className="w-4 h-4 rounded border-surface-border text-brand-sage focus:ring-brand-sage"
           />
           <span className="text-sm text-gray-700">I offer flat-fee trademark filing packages</span>
@@ -235,7 +235,7 @@ export default function SubmitForm() {
         <label className="flex items-center gap-3 cursor-pointer">
           <input
             type="checkbox"
-            {...register('virtual_consult')}
+            {...register('accepting_new_clients')}
             className="w-4 h-4 rounded border-surface-border text-brand-indigo focus:ring-brand-indigo"
           />
           <span className="text-sm text-gray-700">I offer virtual consultations</span>

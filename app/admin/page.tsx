@@ -12,30 +12,31 @@ export default async function AdminPage() {
 
   const [{ data: pendingListings }, { count: totalListings }, { count: claimedListings }, { count: paidListings }] = await Promise.all([
     supabase
-      .from('tm_listings')
+      .from('trademark_attorneys_listings')
       .select('*')
-      .eq('is_approved', false)
+      .eq('credential_verified', false)
+      .eq('status', 'active')
       .order('created_at', { ascending: false })
       .limit(50),
     supabase
-      .from('tm_listings')
+      .from('trademark_attorneys_listings')
       .select('*', { count: 'exact', head: true })
-      .eq('is_active', true),
+      .eq('status', 'active'),
     supabase
-      .from('tm_listings')
+      .from('trademark_attorneys_listings')
       .select('*', { count: 'exact', head: true })
       .not('claimed_at', 'is', null),
     supabase
-      .from('tm_listings')
+      .from('trademark_attorneys_listings')
       .select('*', { count: 'exact', head: true })
-      .in('listing_tier', ['verified', 'featured']),
+      .in('plan_tier', ['verified', 'featured']),
   ])
 
   const stats = [
     { label: 'Total Listings', value: totalListings ?? 0 },
     { label: 'Claimed', value: claimedListings ?? 0 },
     { label: 'Paying', value: paidListings ?? 0 },
-    { label: 'Pending Approval', value: pendingListings?.length ?? 0 },
+    { label: 'Pending Verification', value: pendingListings?.length ?? 0 },
   ]
 
   return (
@@ -53,14 +54,14 @@ export default async function AdminPage() {
 
       {pendingListings && pendingListings.length > 0 && (
         <section>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Pending Approval ({pendingListings.length})</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Pending Verification ({pendingListings.length})</h2>
           <AdminTable listings={pendingListings} />
         </section>
       )}
 
       {(!pendingListings || pendingListings.length === 0) && (
         <div className="text-center py-12 bg-white rounded-xl border border-surface-border">
-          <p className="text-gray-500">No listings pending approval.</p>
+          <p className="text-gray-500">No listings pending verification.</p>
         </div>
       )}
     </div>

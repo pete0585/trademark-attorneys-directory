@@ -4,6 +4,13 @@ import { stripe } from '@/lib/stripe'
 import { createServiceClient } from '@/lib/supabase/server'
 
 export async function POST(req: NextRequest) {
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
+
+  // If webhook secret is pending/placeholder, return 200 without processing
+  if (!webhookSecret || webhookSecret.startsWith('PENDING') || webhookSecret.startsWith('PLACEHOLDER')) {
+    return NextResponse.json({ received: true })
+  }
+
   const body = await req.text()
   const sig = req.headers.get('stripe-signature')
 
@@ -13,7 +20,7 @@ export async function POST(req: NextRequest) {
 
   let event: Stripe.Event
   try {
-    event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET!)
+    event = stripe.webhooks.constructEvent(body, sig, webhookSecret)
   } catch {
     return NextResponse.json({ error: 'Webhook signature verification failed' }, { status: 400 })
   }
@@ -30,16 +37,16 @@ export async function POST(req: NextRequest) {
     }
 
     await supabase
-      .from('tm_listings')
+      .from('trademark_attorneys_listings')
       .update({
-        listing_tier: tier,
+        plan_tier: tier,
         stripe_customer_id: session.customer as string ?? null,
-        subscription_expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+        plan_expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
         updated_at: new Date().toISOString(),
       })
       .eq('id', listingId)
 
-    await supabase.from('tm_payments').insert({
+    await supabase.from('trademark_attorneys_payments').insert({
       listing_id: listingId,
       stripe_session_id: session.id,
       amount: session.amount_total,
@@ -53,11 +60,10 @@ export async function POST(req: NextRequest) {
     const customerId = sub.customer as string
 
     await supabase
-      .from('tm_listings')
+      .from('trademark_attorneys_listings')
       .update({
-        listing_tier: 'free',
-        stripe_subscription_id: null,
-        subscription_expires_at: null,
+        plan_tier: 'free',
+        plan_expires_at: null,
         updated_at: new Date().toISOString(),
       })
       .eq('stripe_customer_id', customerId)
@@ -68,9 +74,9 @@ export async function POST(req: NextRequest) {
     const customerId = invoice.customer as string
 
     await supabase
-      .from('tm_listings')
+      .from('trademark_attorneys_listings')
       .update({
-        listing_tier: 'free',
+        plan_tier: 'free',
         updated_at: new Date().toISOString(),
       })
       .eq('stripe_customer_id', customerId)

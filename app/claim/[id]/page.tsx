@@ -28,7 +28,7 @@ export default async function ClaimPage({ params, searchParams }: Props) {
     const supabase = await createServiceClient()
 
     const { data: claim, error } = await supabase
-      .from('tm_claims')
+      .from('trademark_attorneys_claims')
       .select('*')
       .eq('listing_id', id)
       .eq('token', token)
@@ -53,14 +53,14 @@ export default async function ClaimPage({ params, searchParams }: Props) {
 
     // Mark claim verified
     await supabase
-      .from('tm_claims')
+      .from('trademark_attorneys_claims')
       .update({ verified: true, verified_at: new Date().toISOString() })
       .eq('id', claim.id)
 
     // Mark listing as claimed
     await supabase
-      .from('tm_listings')
-      .update({ claimed_at: new Date().toISOString(), claimed_by: claim.email })
+      .from('trademark_attorneys_listings')
+      .update({ claimed: true, claimed_at: new Date().toISOString() })
       .eq('id', id)
 
     return (
@@ -68,7 +68,7 @@ export default async function ClaimPage({ params, searchParams }: Props) {
         <CheckCircle className="w-12 h-12 text-brand-sage mx-auto mb-4" aria-label="Success" />
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Listing Claimed!</h1>
         <p className="text-gray-600 mb-6">
-          You&apos;ve successfully claimed your listing for <strong>{listing.full_name}</strong>.
+          You&apos;ve successfully claimed your listing for <strong>{listing.name}</strong>.
           Upgrade to Verified to add your photo, bio, specializations, and start receiving inquiries directly.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -93,7 +93,7 @@ export default async function ClaimPage({ params, searchParams }: Props) {
         <Shield className="w-10 h-10 text-brand-indigo mx-auto mb-3" aria-label="Claim" />
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Claim Your Listing</h1>
         <p className="text-gray-600">
-          Claim your listing for <strong>{listing.full_name}</strong> to update your profile
+          Claim your listing for <strong>{listing.name}</strong> to update your profile
           and start receiving inquiries from creators and small businesses.
         </p>
       </div>

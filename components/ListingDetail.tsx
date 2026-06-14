@@ -9,8 +9,8 @@ interface Props {
 }
 
 export default function ListingDetail({ listing }: Props) {
-  const isPaid = listing.listing_tier === 'verified' || listing.listing_tier === 'featured'
-  const isFeatured = listing.listing_tier === 'featured'
+  const isPaid = listing.plan_tier === 'verified' || listing.plan_tier === 'featured'
+  const isFeatured = listing.plan_tier === 'featured'
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -22,7 +22,7 @@ export default function ListingDetail({ listing }: Props) {
         <span>/</span>
         <Link href={`/listings?state=${listing.state}`} className="hover:text-brand-indigo">{listing.state}</Link>
         <span>/</span>
-        <span className="text-gray-900">{listing.full_name}</span>
+        <span className="text-gray-900">{listing.name}</span>
       </div>
 
       <Link href="/listings" className="inline-flex items-center gap-1 text-sm text-brand-indigo hover:underline mb-6">
@@ -35,7 +35,7 @@ export default function ListingDetail({ listing }: Props) {
           {listing.photo_url ? (
             <Image
               src={listing.photo_url}
-              alt={listing.full_name}
+              alt={listing.name}
               width={96}
               height={96}
               className="w-24 h-24 rounded-xl object-cover shrink-0"
@@ -43,7 +43,7 @@ export default function ListingDetail({ listing }: Props) {
           ) : (
             <div className="w-24 h-24 rounded-xl bg-brand-indigo/10 flex items-center justify-center shrink-0">
               <span className="text-3xl font-bold text-brand-indigo">
-                {listing.full_name.charAt(0)}
+                {listing.name.charAt(0)}
               </span>
             </div>
           )}
@@ -57,9 +57,9 @@ export default function ListingDetail({ listing }: Props) {
                 </span>
               )}
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">{listing.full_name}</h1>
-            {listing.law_firm_name && (
-              <p className="text-gray-600 mt-0.5">{listing.law_firm_name}</p>
+            <h1 className="text-2xl font-bold text-gray-900">{listing.name}</h1>
+            {listing.firm_name && (
+              <p className="text-gray-600 mt-0.5">{listing.firm_name}</p>
             )}
 
             <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-600">
@@ -67,13 +67,13 @@ export default function ListingDetail({ listing }: Props) {
                 <MapPin className="w-4 h-4 text-brand-indigo" aria-label="Location" />
                 {listing.city}, {listing.state}
               </span>
-              {listing.flat_fee_filings && (
+              {listing.free_consultation && (
                 <span className="flex items-center gap-1.5 text-brand-sage font-medium">
                   <Star className="w-4 h-4" aria-label="Flat fee" />
                   Flat-Fee Filings Available
                 </span>
               )}
-              {listing.virtual_consult && (
+              {listing.accepting_new_clients && (
                 <span className="flex items-center gap-1.5 text-brand-indigo font-medium">
                   <Laptop className="w-4 h-4" aria-label="Virtual" />
                   Virtual Consultations
@@ -81,10 +81,10 @@ export default function ListingDetail({ listing }: Props) {
               )}
             </div>
 
-            {listing.uspto_registration_number && (
+            {listing.bar_number && (
               <div className="flex items-center gap-1.5 mt-2 text-sm text-gray-500">
                 <Shield className="w-4 h-4 text-brand-indigo" aria-label="USPTO" />
-                USPTO Registration #{listing.uspto_registration_number}
+                USPTO Registration #{listing.bar_number}
               </div>
             )}
           </div>
@@ -118,11 +118,11 @@ export default function ListingDetail({ listing }: Props) {
             </div>
           )}
 
-          {listing.creator_types.length > 0 && (
+          {listing.specialties.length > 0 && (
             <div className="card p-5">
               <h2 className="font-semibold text-gray-900 mb-3">Specializes in Clients Who Are...</h2>
               <div className="flex flex-wrap gap-2">
-                {listing.creator_types.map((ct) => (
+                {listing.specialties.map((ct) => (
                   <Link
                     key={ct}
                     href={`/categories/${ct}`}
@@ -139,7 +139,7 @@ export default function ListingDetail({ listing }: Props) {
           {!listing.claimed_at && (
             <div className="card p-5 border-dashed">
               <p className="text-sm text-gray-500 mb-3">
-                Are you <strong>{listing.full_name}</strong>? Claim this listing to add your photo, bio, specializations, and contact form.
+                Are you <strong>{listing.name}</strong>? Claim this listing to add your photo, bio, specializations, and contact form.
               </p>
               <Link href={`/claim/${listing.id}`} className="btn-outline text-sm">
                 Claim This Listing
@@ -189,7 +189,7 @@ export default function ListingDetail({ listing }: Props) {
               <p className="text-sm text-gray-400">Contact info not yet provided. <Link href={`/claim/${listing.id}`} className="text-brand-indigo hover:underline">Claim this listing</Link> to add it.</p>
             )}
 
-            {listing.listing_tier === 'free' && (
+            {listing.plan_tier === 'free' && (
               <div className="mt-4 pt-4 border-t border-surface-border">
                 <a
                   href={`/api/upgrade?listing_id=${listing.id}&tier=verified`}

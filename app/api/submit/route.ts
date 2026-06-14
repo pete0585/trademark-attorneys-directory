@@ -6,8 +6,8 @@ export async function POST(req: NextRequest) {
   const body = await req.json()
 
   const {
-    full_name,
-    law_firm_name,
+    name,
+    firm_name,
     email,
     phone,
     website,
@@ -15,25 +15,25 @@ export async function POST(req: NextRequest) {
     state,
     bio,
     practice_areas,
-    creator_types,
-    flat_fee_filings,
-    virtual_consult,
-    uspto_registration_number,
+    specialties,
+    free_consultation,
+    accepting_new_clients,
+    bar_number,
   } = body
 
-  if (!full_name || !city || !state) {
+  if (!name || !city || !state) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 
   const supabase = await createServiceClient()
 
-  const baseSlug = slugify(`${full_name}-trademark-attorney-${city}-${state}`)
+  const baseSlug = slugify(`${name}-trademark-attorney-${city}-${state}`)
   let slug = baseSlug
   let attempt = 0
 
   while (attempt < 5) {
     const { data: existing } = await supabase
-      .from('tm_listings')
+      .from('trademark_attorneys_listings')
       .select('id')
       .eq('slug', slug)
       .single()
@@ -44,11 +44,11 @@ export async function POST(req: NextRequest) {
   }
 
   const { data, error } = await supabase
-    .from('tm_listings')
+    .from('trademark_attorneys_listings')
     .insert({
       slug,
-      full_name,
-      law_firm_name: law_firm_name || null,
+      name,
+      firm_name: firm_name || null,
       email: email || null,
       phone: phone || null,
       website: website || null,
@@ -56,14 +56,13 @@ export async function POST(req: NextRequest) {
       state: state.toUpperCase(),
       bio: bio || null,
       practice_areas: practice_areas ?? [],
-      creator_types: creator_types ?? [],
-      flat_fee_filings: flat_fee_filings ?? false,
-      virtual_consult: virtual_consult ?? false,
-      uspto_registration_number: uspto_registration_number || null,
-      listing_tier: 'free',
-      is_active: true,
-      is_approved: false,
-      source: 'self_submit',
+      specialties: specialties ?? [],
+      free_consultation: free_consultation ?? false,
+      accepting_new_clients: accepting_new_clients ?? false,
+      bar_number: bar_number || null,
+      plan_tier: 'free',
+      credential_verified: false,
+      status: 'active',
     })
     .select('id, slug')
     .single()

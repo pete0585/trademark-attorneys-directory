@@ -95,8 +95,8 @@ export default async function BestOfPage({ params }: Props) {
   const { city, state, stateAbbr, intro, whyMatters, criteria } = page
   const listings = await getListingsByCity(city, stateAbbr)
 
-  const featured = listings.filter((l) => l.listing_tier === 'featured')
-  const verified = listings.filter((l) => l.listing_tier === 'verified')
+  const featured = listings.filter((l) => l.plan_tier === 'featured')
+  const verified = listings.filter((l) => l.plan_tier === 'verified')
   const displayListings = featured.length > 0 ? [...featured, ...verified].slice(0, 9) : listings.slice(0, 9)
 
   return (

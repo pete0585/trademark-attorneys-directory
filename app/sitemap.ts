@@ -12,16 +12,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const [{ data: slugData }, { data: stateData }] = await Promise.all([
     supabase
-      .from('tm_listings')
+      .from('trademark_attorneys_listings')
       .select('slug, updated_at')
-      .eq('is_active', true)
-      .eq('is_approved', true)
+      .eq('status', 'active')
       .limit(50000),
     supabase
-      .from('tm_listings')
+      .from('trademark_attorneys_listings')
       .select('state')
-      .eq('is_active', true)
-      .eq('is_approved', true),
+      .eq('status', 'active'),
   ])
 
   const listingUrls: MetadataRoute.Sitemap = (slugData ?? []).map((r) => ({
