@@ -49,11 +49,12 @@ export const PRACTICE_AREAS = [
   'International Trademark',
 ]
 
-export const CREATOR_TYPES = [
-  'Small Business',
-  'Startup',
-  'Individual Creator',
-  'E-commerce',
-  'Brand Owner',
-  'Entertainment',
-]
+export const CREATOR_TYPES: Record<string, string> = {
+  small_business: 'Small Business',
+  startup: 'Startup',
+  content_creator: 'Content Creator',
+  ecommerce: 'E-commerce',
+  saas_app: 'SaaS / App',
+  podcaster: 'Podcaster',
+  author_coach: 'Author / Coach',
+}

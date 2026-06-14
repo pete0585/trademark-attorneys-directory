@@ -1,10 +1,10 @@
-import { createClient } from './supabase/server'
+import { createPublicClient } from './supabase/server'
 import type { TrademarkAttorney } from '@/lib/types'
 
 const TABLE = 'trademark_attorneys_listings'
 
 export async function getTotalCount(): Promise<number> {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { count } = await supabase
     .from(TABLE)
     .select('*', { count: 'exact', head: true })
@@ -27,7 +27,7 @@ export async function getListings({
   page?: number
   pageSize?: number
 } = {}): Promise<{ listings: TrademarkAttorney[]; total: number }> {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   let query = supabase
     .from(TABLE)
     .select('*', { count: 'exact' })
@@ -53,7 +53,7 @@ export async function getListings({
 }
 
 export async function getListingBySlug(slug: string): Promise<TrademarkAttorney | null> {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data } = await supabase
     .from(TABLE)
     .select('*')
@@ -64,7 +64,7 @@ export async function getListingBySlug(slug: string): Promise<TrademarkAttorney 
 }
 
 export async function getListingById(id: string): Promise<TrademarkAttorney | null> {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data } = await supabase
     .from(TABLE)
     .select('*')
@@ -74,7 +74,7 @@ export async function getListingById(id: string): Promise<TrademarkAttorney | nu
 }
 
 export async function getFeaturedListings(limit = 6): Promise<TrademarkAttorney[]> {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data } = await supabase
     .from(TABLE)
     .select('*')
@@ -89,7 +89,7 @@ export async function getListingsByState(
   state: string,
   limit = 20,
 ): Promise<TrademarkAttorney[]> {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data } = await supabase
     .from(TABLE)
     .select('*')
@@ -101,7 +101,7 @@ export async function getListingsByState(
 }
 
 export async function getActiveStates(): Promise<string[]> {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data } = await supabase
     .from(TABLE)
     .select('state')
@@ -113,10 +113,42 @@ export async function getActiveStates(): Promise<string[]> {
 }
 
 export async function getAllSlugs(): Promise<string[]> {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data } = await supabase
     .from(TABLE)
     .select('slug')
     .eq('status', 'active')
   return (data ?? []).map((r: { slug: string }) => r.slug)
+}
+
+// Map creator type slugs to specialty keywords for filtering
+const CREATOR_TYPE_SPECIALTIES: Record<string, string> = {
+  small_business: 'Small Business',
+  startup: 'Startup',
+  content_creator: 'Content Creator',
+  ecommerce: 'E-commerce',
+  saas_app: 'Software',
+  podcaster: 'Entertainment',
+  author_coach: 'Copyright',
+}
+
+export async function getListingsByCreatorType(
+  creatorType: string,
+  limit = 24,
+): Promise<TrademarkAttorney[]> {
+  const supabase = createPublicClient()
+  const specialty = CREATOR_TYPE_SPECIALTIES[creatorType]
+  let query = supabase
+    .from(TABLE)
+    .select('*')
+    .eq('status', 'active')
+    .order('plan_tier_rank', { ascending: false, nullsFirst: false })
+    .limit(limit)
+
+  if (specialty) {
+    query = query.contains('specialties', [specialty])
+  }
+
+  const { data } = await query
+  return (data as TrademarkAttorney[]) ?? []
 }
