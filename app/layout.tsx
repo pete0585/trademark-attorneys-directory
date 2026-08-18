@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     template: '%s | TrademarksearchDirectory.com',
   },
   description:
-    'Find a trademark attorney near you. Search 1,000+ USPTO-registered IP lawyers by city, state, and specialty. Free to search. Trademark registration, enforcement, and brand protection.',
+    'Find a trademark attorney near you. Search 1,000+ USPTO-registered IP lawyers by city and specialty. Trademark registration, enforcement, and brand protection.',
   keywords: [
     'trademark attorney',
     'trademark lawyer',
