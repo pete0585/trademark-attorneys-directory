@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const attorney = await getListingBySlug(slug)
   if (!attorney) return { title: 'Attorney Not Found' }
 
-  const displayName = attorney.firm_name || attorney.name
+  const displayName = attorney.firm_name || attorney.full_name
   const title = `${displayName} — Trademark Attorney in ${attorney.city}, ${attorney.state}`
 
   return {
@@ -50,7 +50,7 @@ export default async function ListingDetailPage({ params }: Props) {
   })
   const otherAttorneys = similar.filter((a) => a.id !== attorney.id).slice(0, 3)
 
-  const displayName = attorney.firm_name || attorney.name
+  const displayName = attorney.firm_name || attorney.full_name
   const isVerified = attorney.plan_tier === 'verified' || attorney.plan_tier === 'featured'
   const isFeatured = attorney.plan_tier === 'featured'
   return (
@@ -93,8 +93,8 @@ export default async function ListingDetailPage({ params }: Props) {
 
               <div className="flex-1">
                 <h1 className="text-2xl font-serif font-bold text-navy-800">{displayName}</h1>
-                {attorney.firm_name && attorney.name !== attorney.firm_name && (
-                  <p className="text-slate-600 mt-0.5">{attorney.name}</p>
+                {attorney.firm_name && attorney.full_name !== attorney.firm_name && (
+                  <p className="text-slate-600 mt-0.5">{attorney.full_name}</p>
                 )}
                 <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                   <div className="flex items-center gap-1 text-sm text-slate-500">
