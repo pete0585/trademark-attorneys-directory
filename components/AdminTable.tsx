@@ -49,7 +49,7 @@ export default function AdminTable({ listings }: Props) {
           {rows.map((listing) => (
             <tr key={listing.id} className="hover:bg-surface/50">
               <td className="px-4 py-3">
-                <div className="font-medium text-gray-900">{listing.name}</div>
+                <div className="font-medium text-gray-900">{listing.full_name}</div>
                 {listing.firm_name && (
                   <div className="text-xs text-gray-500">{listing.firm_name}</div>
                 )}
@@ -57,7 +57,7 @@ export default function AdminTable({ listings }: Props) {
               <td className="px-4 py-3 text-gray-600">
                 {listing.city}, {listing.state}
               </td>
-              <td className="px-4 py-3 text-gray-500 text-xs">{listing.status}</td>
+              <td className="px-4 py-3 text-gray-500 text-xs">{listing.listing_tier ?? listing.is_active ? "active" : "inactive"}</td>
               <td className="px-4 py-3 text-gray-500 text-xs">
                 {new Date(listing.created_at).toLocaleDateString()}
               </td>
