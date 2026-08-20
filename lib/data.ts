@@ -32,15 +32,15 @@ export async function getListings({
     .from(TABLE)
     .select('*', { count: 'exact' })
     .eq('is_active', true)
-    .order('plan_tier_rank', { ascending: false, nullsFirst: false })
-    .order('name', { ascending: true })
+    .order('listing_tier_rank', { ascending: false, nullsFirst: false })
+    .order('full_name', { ascending: true })
 
   if (state) query = query.ilike('state', state)
   if (city) query = query.ilike('city', city)
   if (specialty) query = query.contains('specialties', [specialty])
   if (search) {
     query = query.or(
-      `name.ilike.%${search}%,firm_name.ilike.%${search}%,city.ilike.%${search}%,state.ilike.%${search}%`,
+      `full_name.ilike.%${search}%,firm_name.ilike.%${search}%,city.ilike.%${search}%,state.ilike.%${search}%`,
     )
   }
 
@@ -80,7 +80,7 @@ export async function getFeaturedListings(limit = 6): Promise<TrademarkAttorney[
     .select('*')
     .eq('is_active', true)
     .in('plan_tier', ['verified', 'featured'])
-    .order('plan_tier_rank', { ascending: false, nullsFirst: false })
+    .order('listing_tier_rank', { ascending: false, nullsFirst: false })
     .limit(limit)
   return (data as TrademarkAttorney[]) ?? []
 }
@@ -95,7 +95,7 @@ export async function getListingsByState(
     .select('*')
     .ilike('state', state)
     .eq('is_active', true)
-    .order('plan_tier_rank', { ascending: false, nullsFirst: false })
+    .order('listing_tier_rank', { ascending: false, nullsFirst: false })
     .limit(limit)
   return (data as TrademarkAttorney[]) ?? []
 }
@@ -149,12 +149,11 @@ export async function getListingsByCity(
     .ilike('city', city)
     .ilike('state', state)
     .eq('is_active', true)
-    .order('plan_tier_rank', { ascending: false, nullsFirst: false })
+    .order('listing_tier_rank', { ascending: false, nullsFirst: false })
     .limit(limit)
   return (data as TrademarkAttorney[]) ?? []
 }
 
-// Map creator type slugs to specialty keywords for filtering
 const CREATOR_TYPE_SPECIALTIES: Record<string, string> = {
   small_business: 'Small Business',
   startup: 'Startup',
@@ -175,7 +174,7 @@ export async function getListingsByCreatorType(
     .from(TABLE)
     .select('*')
     .eq('is_active', true)
-    .order('plan_tier_rank', { ascending: false, nullsFirst: false })
+    .order('listing_tier_rank', { ascending: false, nullsFirst: false })
     .limit(limit)
 
   if (specialty) {
