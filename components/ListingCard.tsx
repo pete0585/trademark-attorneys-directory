@@ -8,6 +8,7 @@ interface ListingCardProps {
 }
 
 export default function ListingCard({ attorney }: ListingCardProps) {
+  if (!attorney) return null
   const isFeatured = attorney.plan_tier === 'featured'
   const isVerified = attorney.plan_tier === 'verified' || isFeatured
   const displayName = attorney.firm_name || attorney.full_name
