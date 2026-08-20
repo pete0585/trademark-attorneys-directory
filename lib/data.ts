@@ -1,7 +1,7 @@
 import { createPublicClient } from './supabase/server'
 import type { TrademarkAttorney } from '@/lib/types'
 
-const TABLE = 'trademark_attorneys_listings'
+const TABLE = 'trademark_attorney_listings'
 
 export async function getTotalCount(): Promise<number> {
   const supabase = createPublicClient()
