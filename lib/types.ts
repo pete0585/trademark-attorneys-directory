@@ -1,7 +1,8 @@
 export interface TrademarkAttorney {
   id: string
   slug: string
-  name: string
+  full_name: string
+  name?: string | null
   firm_name: string | null
   practitioner_type: string
   bio: string | null
@@ -15,30 +16,30 @@ export interface TrademarkAttorney {
   zip: string | null
   lat: number | null
   lng: number | null
-  latitude: number | null
-  longitude: number | null
   bar_number: string | null
-  bar_admissions: string[]
-  practice_areas: string[]
+  bar_state: string | null
+  law_school: string | null
+  areas_of_practice: string[]
   specialties: string[]
   languages: string[]
+  telehealth: boolean
   accepting_new_clients: boolean
-  free_consultation: boolean
-  years_experience: number | null
-  credential_verified: boolean
   plan_tier: 'free' | 'verified' | 'featured'
-  plan_tier_rank: number | null
-  plan_expires_at: string | null
+  listing_tier: string | null
+  listing_tier_rank: number | null
+  is_active: boolean
+  is_approved: boolean
   claimed: boolean
   claimed_at: string | null
   stripe_customer_id: string | null
-  status: string
-  do_not_email: boolean
-  email_source: string | null
+  plan_expires_at: string | null
+  source: string | null
   outreach_step: number
   outreach_last_sent_at: string | null
   upgrade_nudge_step: number
   upgrade_nudge_sent_at: string | null
+  do_not_email: boolean
+  email_source: string | null
   search_vector: string | null
   created_at: string
   updated_at: string
