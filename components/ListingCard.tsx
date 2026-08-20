@@ -40,7 +40,7 @@ export default function ListingCard({ attorney }: ListingCardProps) {
               />
             ) : (
               <span className="text-navy-600 font-bold text-lg">
-                {displayName.charAt(0).toUpperCase()}
+                {(displayName ?? '?').charAt(0).toUpperCase()}
               </span>
             )}
           </div>
