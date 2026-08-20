@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description: attorney.bio
       ? attorney.bio.slice(0, 160)
-      : `${displayName} is a trademark attorney in ${attorney.city}, ${attorney.state}. Specializing in ${attorney.specialties.slice(0, 2).join(' and ')}.`,
+      : `${displayName} is a trademark attorney in ${attorney.city}, ${attorney.state}. Specializing in ${(attorney.specialties ?? []).slice(0, 2).join(' and ')}.`,
     alternates: { canonical: `/listings/${slug}` },
     openGraph: { title, type: 'profile' },
   }
@@ -86,7 +86,7 @@ export default async function ListingDetailPage({ params }: Props) {
                   />
                 ) : (
                   <span className="text-navy-600 font-bold text-2xl">
-                    {displayName.charAt(0).toUpperCase()}
+                    {(displayName ?? '?').charAt(0).toUpperCase()}
                   </span>
                 )}
               </div>
