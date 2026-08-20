@@ -8,7 +8,7 @@ export async function getTotalCount(): Promise<number> {
   const { count } = await supabase
     .from(TABLE)
     .select('*', { count: 'exact', head: true })
-    .eq('status', 'active')
+    .eq('is_active', true)
   return count ?? 0
 }
 
@@ -31,7 +31,7 @@ export async function getListings({
   let query = supabase
     .from(TABLE)
     .select('*', { count: 'exact' })
-    .eq('status', 'active')
+    .eq('is_active', true)
     .order('plan_tier_rank', { ascending: false, nullsFirst: false })
     .order('name', { ascending: true })
 
@@ -58,7 +58,7 @@ export async function getListingBySlug(slug: string): Promise<TrademarkAttorney 
     .from(TABLE)
     .select('*')
     .eq('slug', slug)
-    .eq('status', 'active')
+    .eq('is_active', true)
     .single()
   return data as TrademarkAttorney | null
 }
@@ -78,7 +78,7 @@ export async function getFeaturedListings(limit = 6): Promise<TrademarkAttorney[
   const { data } = await supabase
     .from(TABLE)
     .select('*')
-    .eq('status', 'active')
+    .eq('is_active', true)
     .in('plan_tier', ['verified', 'featured'])
     .order('plan_tier_rank', { ascending: false, nullsFirst: false })
     .limit(limit)
@@ -94,7 +94,7 @@ export async function getListingsByState(
     .from(TABLE)
     .select('*')
     .ilike('state', state)
-    .eq('status', 'active')
+    .eq('is_active', true)
     .order('plan_tier_rank', { ascending: false, nullsFirst: false })
     .limit(limit)
   return (data as TrademarkAttorney[]) ?? []
@@ -105,7 +105,7 @@ export async function getActiveStates(): Promise<string[]> {
   const { data } = await supabase
     .from(TABLE)
     .select('state')
-    .eq('status', 'active')
+    .eq('is_active', true)
   const states = Array.from(
     new Set((data ?? []).map((r: { state: string }) => r.state).filter(Boolean)),
   ).sort()
@@ -117,7 +117,7 @@ export async function getAllSlugs(): Promise<string[]> {
   const { data } = await supabase
     .from(TABLE)
     .select('slug')
-    .eq('status', 'active')
+    .eq('is_active', true)
   return (data ?? []).map((r: { slug: string }) => r.slug)
 }
 
@@ -130,7 +130,7 @@ export async function getCitiesByState(
     .from(TABLE)
     .select('city')
     .ilike('state', state)
-    .eq('status', 'active')
+    .eq('is_active', true)
   const cities = Array.from(
     new Set((data ?? []).map((r: { city: string }) => r.city).filter(Boolean)),
   ).sort()
@@ -148,7 +148,7 @@ export async function getListingsByCity(
     .select('*')
     .ilike('city', city)
     .ilike('state', state)
-    .eq('status', 'active')
+    .eq('is_active', true)
     .order('plan_tier_rank', { ascending: false, nullsFirst: false })
     .limit(limit)
   return (data as TrademarkAttorney[]) ?? []
@@ -174,7 +174,7 @@ export async function getListingsByCreatorType(
   let query = supabase
     .from(TABLE)
     .select('*')
-    .eq('status', 'active')
+    .eq('is_active', true)
     .order('plan_tier_rank', { ascending: false, nullsFirst: false })
     .limit(limit)
 
