@@ -17,7 +17,7 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  const slugs = await getAllSlugs()
+  const slugs = await getAllSlugs().catch(() => [] as string[])
   return slugs.slice(0, 500).map((slug) => ({ slug }))
 }
 
@@ -53,7 +53,6 @@ export default async function ListingDetailPage({ params }: Props) {
   const displayName = attorney.firm_name || attorney.name
   const isVerified = attorney.plan_tier === 'verified' || attorney.plan_tier === 'featured'
   const isFeatured = attorney.plan_tier === 'featured'
-
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Link
