@@ -10,18 +10,20 @@ import { formatPhone } from '@/lib/utils'
 import ListingCard from '@/components/ListingCard'
 
 export const revalidate = 3600
+export const dynamicParams = true
+
+interface Props {
+  params: Promise<{ slug: string }>
+}
 
 export async function generateStaticParams() {
   const slugs = await getAllSlugs()
   return slugs.slice(0, 500).map((slug) => ({ slug }))
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string }
-}): Promise<Metadata> {
-  const attorney = await getListingBySlug(params.slug)
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
+  const attorney = await getListingBySlug(slug)
   if (!attorney) return { title: 'Attorney Not Found' }
 
   const displayName = attorney.firm_name || attorney.name
@@ -32,16 +34,14 @@ export async function generateMetadata({
     description: attorney.bio
       ? attorney.bio.slice(0, 160)
       : `${displayName} is a trademark attorney in ${attorney.city}, ${attorney.state}. Specializing in ${attorney.specialties.slice(0, 2).join(' and ')}.`,
+    alternates: { canonical: `/listings/${slug}` },
     openGraph: { title, type: 'profile' },
   }
 }
 
-export default async function ListingDetailPage({
-  params,
-}: {
-  params: { slug: string }
-}) {
-  const attorney = await getListingBySlug(params.slug)
+export default async function ListingDetailPage({ params }: Props) {
+  const { slug } = await params
+  const attorney = await getListingBySlug(slug)
   if (!attorney) notFound()
 
   const { listings: similar } = await getListings({
