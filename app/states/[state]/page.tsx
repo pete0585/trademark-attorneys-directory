@@ -164,7 +164,7 @@ export default async function StatePage({ params }: Props) {
         <section className="mb-10">
           <h2 className="text-lg font-bold text-gray-900 mb-4">Browse by City in {name}</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            {cityBreakdown.map(({ city, count }) => {
+            {cityBreakdown.map((city) => {
               const citySlug = `${city.toLowerCase().replace(/ /g, '-')}-${abbr.toLowerCase()}`
               return (
                 <Link
@@ -175,7 +175,6 @@ export default async function StatePage({ params }: Props) {
                   <span className="font-medium text-gray-700 group-hover:text-brand-indigo">
                     {city}
                   </span>
-                  <span className="text-xs text-gray-400 ml-2">{count}</span>
                 </Link>
               )
             })}
