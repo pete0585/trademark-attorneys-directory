@@ -142,11 +142,11 @@ export default async function ListingDetailPage({ params }: Props) {
               </div>
             )}
 
-            {attorney.practice_areas && attorney.practice_areas.length > 0 && (
+            {attorney.areas_of_practice && attorney.areas_of_practice.length > 0 && (
               <div className="mt-4">
                 <h2 className="font-semibold text-navy-800 mb-2">Practice Areas</h2>
                 <div className="flex flex-wrap gap-2">
-                  {attorney.practice_areas.map((a) => (
+                  {attorney.areas_of_practice.map((a) => (
                     <span
                       key={a}
                       className="text-sm bg-slate-50 text-slate-600 px-3 py-1 rounded-full border border-slate-200"
