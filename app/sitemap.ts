@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { getAllSlugs } from '@/lib/data'
 
-const SITE_URL = 'https://trademarksearchdirectory.com'
+const SITE_URL = 'https://www.findtrademarkattorney.com'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const slugs = await getAllSlugs()
