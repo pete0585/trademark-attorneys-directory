@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { getListingsByCreatorType } from '@/lib/data'
 import { CREATOR_TYPES } from '@/lib/utils'
+import { SITE_URL } from '@/lib/site'
 import ListingCard from '@/components/ListingCard'
 
 interface Props {
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `Trademark Attorneys for ${label} | FindTrademarkAttorney.com`,
     description: `Find USPTO-registered trademark attorneys who specialize in ${label}. Compare attorneys by location, specialty, and flat-fee options.`,
-    alternates: { canonical: `https://www.findtrademarkattorney.com/categories/${slug}` },
+    alternates: { canonical: `${SITE_URL}/categories/${slug}` },
   }
 }
 
