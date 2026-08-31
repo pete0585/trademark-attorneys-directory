@@ -1,23 +1,45 @@
 import type { MetadataRoute } from 'next'
 import { getAllSlugs } from '@/lib/data'
+import { SITE_URL, CATEGORY_SLUGS, GUIDE_SLUGS, STATE_SLUGS } from '@/lib/site'
 
-const SITE_URL = 'https://www.findtrademarkattorney.com'
+function page(
+  path: string,
+  changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'],
+  priority: number,
+): MetadataRoute.Sitemap[number] {
+  return {
+    url: path === '/' ? SITE_URL : `${SITE_URL}${path}`,
+    lastModified: new Date(),
+    changeFrequency,
+    priority,
+  }
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const slugs = await getAllSlugs()
 
   const staticPages: MetadataRoute.Sitemap = [
-    { url: SITE_URL, lastModified: new Date(), changeFrequency: 'daily', priority: 1 },
-    { url: `${SITE_URL}/listings`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
-    { url: `${SITE_URL}/claim`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+    page('/', 'daily', 1),
+    page('/listings', 'daily', 0.9),
+    page('/claim', 'monthly', 0.6),
+    page('/guides', 'weekly', 0.8),
   ]
 
-  const listingPages: MetadataRoute.Sitemap = slugs.map((slug) => ({
-    url: `${SITE_URL}/listings/${slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: 0.7,
-  }))
+  const categoryPages: MetadataRoute.Sitemap = CATEGORY_SLUGS.map((slug) =>
+    page(`/categories/${slug}`, 'weekly', 0.7),
+  )
 
-  return [...staticPages, ...listingPages]
+  const guidePages: MetadataRoute.Sitemap = GUIDE_SLUGS.map((slug) =>
+    page(`/guides/${slug}`, 'monthly', 0.6),
+  )
+
+  const statePages: MetadataRoute.Sitemap = STATE_SLUGS.map((state) =>
+    page(`/states/${state}`, 'weekly', 0.8),
+  )
+
+  const listingPages: MetadataRoute.Sitemap = slugs.map((slug) =>
+    page(`/listings/${slug}`, 'weekly', 0.7),
+  )
+
+  return [...staticPages, ...categoryPages, ...guidePages, ...statePages, ...listingPages]
 }

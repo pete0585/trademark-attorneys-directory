@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Star, MapPin } from 'lucide-react'
 import { getListingsByCity } from '@/lib/data'
 import { STATE_NAMES } from '@/lib/utils'
+import { SITE_URL } from '@/lib/site'
 import ListingCard from '@/components/ListingCard'
 
 interface Props {
@@ -80,7 +81,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `Best Trademark Attorneys in ${page.city}, ${page.state} | FindTrademarkAttorney.com`,
     description: `Top USPTO-registered trademark attorneys in ${page.city}, ${page.state}. Specialized in creators, e-commerce brands, and small business IP.`,
     alternates: {
-      canonical: `https://www.findtrademarkattorney.com/best/${slug}`,
+      canonical: `${SITE_URL}/best/${slug}`,
     },
   }
 }

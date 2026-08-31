@@ -1,12 +1,13 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { BookOpen, ArrowRight } from 'lucide-react'
+import { SITE_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'Trademark Guides for Creators & Business Owners | FindTrademarkAttorney.com',
   description:
     'Plain-English guides on trademark registration, how to choose an attorney, trademark vs. copyright, and what to ask before you hire. Written for creators and small business owners.',
-  alternates: { canonical: 'https://www.findtrademarkattorney.com/guides' },
+  alternates: { canonical: `${SITE_URL}/guides` },
 }
 
 const guides = [

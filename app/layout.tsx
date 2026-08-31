@@ -4,8 +4,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-
-const SITE_URL = 'https://trademarksearchdirectory.com'
+import { SITE_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: {

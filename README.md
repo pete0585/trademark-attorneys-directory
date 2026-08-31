@@ -2,7 +2,7 @@
 
 A Next.js 14 App Router directory site for trademark attorneys in the United States.
 
-- **Live site:** https://trademarksearchdirectory.com
+- **Live site:** https://www.findtrademarkattorney.com
 - **Supabase table:** `trademark_attorney_listings` (project: fbuqrnzofktepkzyfmhy)
 - **Vercel project:** trademark-attorneys-directory
 - **Listings:** 1,150+ trademark attorneys across all 50 states
@@ -31,7 +31,7 @@ Placeholder env vars are set in `.env.example`.
 NEXT_PUBLIC_SUPABASE_URL=https://fbuqrnzofktepkzyfmhy.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 SUPABASE_SERVICE_KEY=...
-NEXT_PUBLIC_SITE_URL=https://trademarksearchdirectory.com
+NEXT_PUBLIC_SITE_URL=https://www.findtrademarkattorney.com
 ```
 
 ## Development
