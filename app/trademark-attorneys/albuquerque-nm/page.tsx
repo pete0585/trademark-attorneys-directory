@@ -1,10 +1,12 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
+import { cityPageCanonical } from "@/lib/site"
 
 export const metadata: Metadata = {
   title: "Best Trademark Attorney in Albuquerque, NM | Trademark Attorney Directory",
   description: "Find trademark attorney in Albuquerque, New Mexico. 24+ listed. Filter by city and compare providers.",
+  alternates: { canonical: cityPageCanonical("albuquerque-nm") },
 }
 
 async function getListings() {

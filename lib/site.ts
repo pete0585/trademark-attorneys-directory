@@ -10,7 +10,41 @@
  * other, so the canonical host is the one already used by the sitemap and
  * page-level alternates.canonical tags: www.
  */
-export const SITE_URL = 'https://www.findtrademarkattorney.com'
+export const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.findtrademarkattorney.com'
+).replace(/\/$/, '')
+
+/** Absolute canonical for a city landing page under /trademark-attorneys/{city}-{state}. */
+export function cityPageCanonical(slug: string): string {
+  return `${SITE_URL}/trademark-attorneys/${slug}`
+}
+
+/**
+ * City slugs served by app/trademark-attorneys/[location].
+ * Static {city}-{state} folders override this route when both exist.
+ */
+export const CITY_SLUGS = [
+  'new-york-ny',
+  'los-angeles-ca',
+  'chicago-il',
+  'houston-tx',
+  'san-francisco-ca',
+  'austin-tx',
+  'miami-fl',
+  'seattle-wa',
+  'boston-ma',
+  'atlanta-ga',
+  'denver-co',
+  'dallas-tx',
+  'nashville-tn',
+  'philadelphia-pa',
+  'phoenix-az',
+  'portland-or',
+  'san-diego-ca',
+  'orlando-fl',
+  'charlotte-nc',
+  'washington-dc',
+] as const
 
 /** Category pages under app/categories/[slug] (CREATOR_TYPES keys). */
 export const CATEGORY_SLUGS = [
