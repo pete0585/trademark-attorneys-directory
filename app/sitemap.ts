@@ -1,6 +1,9 @@
 import type { MetadataRoute } from 'next'
 import { getAllSlugs } from '@/lib/data'
 import { SITE_URL, CATEGORY_SLUGS, GUIDE_SLUGS, STATE_SLUGS } from '@/lib/site'
+import { getAllCityPageSlugs } from '@/lib/city-pages'
+
+const BASE = (process.env.NEXT_PUBLIC_SITE_URL ?? SITE_URL).replace(/\/$/, '')
 
 function page(
   path: string,
@@ -8,7 +11,7 @@ function page(
   priority: number,
 ): MetadataRoute.Sitemap[number] {
   return {
-    url: path === '/' ? SITE_URL : `${SITE_URL}${path}`,
+    url: path === '/' ? BASE : `${BASE}${path}`,
     lastModified: new Date(),
     changeFrequency,
     priority,
@@ -41,5 +44,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     page(`/listings/${slug}`, 'weekly', 0.7),
   )
 
-  return [...staticPages, ...categoryPages, ...guidePages, ...statePages, ...listingPages]
+  const cityPages: MetadataRoute.Sitemap = getAllCityPageSlugs().map((slug) =>
+    page(`/trademark-attorneys/${slug}`, 'weekly', 0.8),
+  )
+
+  return [
+    ...staticPages,
+    ...categoryPages,
+    ...guidePages,
+    ...statePages,
+    ...cityPages,
+    ...listingPages,
+  ]
 }

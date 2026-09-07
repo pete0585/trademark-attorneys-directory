@@ -1,10 +1,12 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
+import { cityPageCanonical } from "@/lib/site"
 
 export const metadata: Metadata = {
   title: "Best Trademark Attorney in Indianapolis, IN | Trademark Attorney Directory",
   description: "Find trademark attorney in Indianapolis, Indiana. 22+ listed. Filter by city and compare providers.",
+  alternates: { canonical: cityPageCanonical("indianapolis-in") },
 }
 
 async function getListings() {

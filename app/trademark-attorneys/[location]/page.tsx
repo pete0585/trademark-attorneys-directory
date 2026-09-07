@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { MapPin, Briefcase, ArrowRight } from 'lucide-react'
 import { getListingsByCity } from '@/lib/data'
 import { STATE_NAMES } from '@/lib/utils'
-import { SITE_URL } from '@/lib/site'
+import { CITY_SLUGS, cityPageCanonical } from '@/lib/site'
 import ListingCard from '@/components/ListingCard'
 
 interface Props {
@@ -23,29 +23,6 @@ function parseCitySlug(slug: string): { city: string; stateAbbr: string } | null
   return { city, stateAbbr }
 }
 
-const CITY_SLUGS = [
-  'new-york-ny',
-  'los-angeles-ca',
-  'chicago-il',
-  'houston-tx',
-  'san-francisco-ca',
-  'austin-tx',
-  'miami-fl',
-  'seattle-wa',
-  'boston-ma',
-  'atlanta-ga',
-  'denver-co',
-  'dallas-tx',
-  'nashville-tn',
-  'philadelphia-pa',
-  'phoenix-az',
-  'portland-or',
-  'san-diego-ca',
-  'orlando-fl',
-  'charlotte-nc',
-  'washington-dc',
-]
-
 export async function generateStaticParams() {
   return CITY_SLUGS.map((location) => ({ location }))
 }
@@ -61,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `Trademark Attorneys in ${city}, ${stateName} | FindTrademarkAttorney.com`,
     description: `Find USPTO-registered trademark attorneys in ${city}, ${stateName}. Compare by specialty, creator type, and flat-fee pricing. Free to search.`,
     alternates: {
-      canonical: `${SITE_URL}/trademark-attorneys/${location}`,
+      canonical: cityPageCanonical(location),
     },
   }
 }
