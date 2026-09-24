@@ -3,6 +3,7 @@ import { Scale, Shield, CheckCircle, Star, ArrowRight, MapPin, Gavel, BookOpen }
 import { getTotalCount, getFeaturedListings, getListings } from '@/lib/data'
 import SearchBar from '@/components/SearchBar'
 import ListingCard from '@/components/ListingCard'
+import NewsletterSignup from '@/components/NewsletterSignup'
 
 export const revalidate = 3600
 
