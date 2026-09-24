@@ -44,13 +44,22 @@ export default async function HomePage() {
               {displayCount.toLocaleString()}+ Trademark Attorneys Listed
             </div>
             <h1 className="font-serif text-4xl md:text-5xl font-bold mb-4 leading-tight">
-              Find a Trademark Attorney<br />
-              <span className="text-gold-300">Near You</span>
-            </h1>
+            Find trusted trademark attorneys near you
+          </h1>
             <p className="text-lg text-slate-300 mb-8">
-              Search USPTO-registered intellectual property lawyers by city, state, and specialty.
-              Protect your brand with the right legal expert.
-            </p>
+            Browse USPTO-registered trademark attorneys by state and specialty — and connect directly. Free, always.
+          </p>
+          <p className="text-sm text-gray-500 mt-4">
+            Are you a trademark attorney?{' '}
+            <a
+              href="https://studiozerohq.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:opacity-80"
+            >
+              List your practice free →
+            </a>
+          </p>
           </div>
           <div className="max-w-3xl mx-auto">
             <SearchBar />
