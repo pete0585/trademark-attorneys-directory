@@ -71,7 +71,7 @@ export default async function CategoryPage({ params }: Props) {
           <p className="text-sm text-gray-500 mb-4">{listings.length} attorneys found</p>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {listings.map((listing) => (
-              <ListingCard key={listing.id} listing={listing} />
+              <ListingCard key={listing.id} attorney={listing} />
             ))}
           </div>
         </>

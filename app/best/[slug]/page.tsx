@@ -170,7 +170,7 @@ export default async function BestOfPage({ params }: Props) {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {displayListings.map((listing) => (
-              <ListingCard key={listing.id} listing={listing} />
+              <ListingCard key={listing.id} attorney={listing} />
             ))}
           </div>
           <div className="mt-6">

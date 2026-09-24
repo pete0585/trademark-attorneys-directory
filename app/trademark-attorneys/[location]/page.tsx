@@ -205,7 +205,7 @@ export default async function CityPage({ params }: Props) {
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {listings.map((listing) => (
-                <ListingCard key={listing.id} listing={listing} />
+                <ListingCard key={listing.id} attorney={listing} />
               ))}
             </div>
             <div className="mt-6 flex flex-wrap gap-3">

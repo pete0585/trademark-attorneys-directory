@@ -47,19 +47,16 @@ export default function ListingDetail({ listing }: Props) {
                 <MapPin className="w-4 h-4 text-brand-indigo" aria-label="Location"/>
                 {listing.city}, {listing.state}
               </span>
-              {listing.free_consultation && (<span className="flex items-center gap-1.5 text-brand-sage font-medium">
-                  <Star className="w-4 h-4" aria-label="Flat fee"/>
-                  Flat-Fee Filings Available
-                </span>)}
+              
               {listing.accepting_new_clients && (<span className="flex items-center gap-1.5 text-brand-indigo font-medium">
                   <Laptop className="w-4 h-4" aria-label="Virtual"/>
-                  Virtual Consultations
+                  Accepting New Clients
                 </span>)}
             </div>
 
             {listing.bar_number && (<div className="flex items-center gap-1.5 mt-2 text-sm text-gray-500">
                 <Shield className="w-4 h-4 text-brand-indigo" aria-label="USPTO"/>
-                USPTO Registration #{listing.bar_number}
+                Bar Registration #{listing.bar_number}
               </div>)}
           </div>
         </div>
@@ -77,7 +74,7 @@ export default function ListingDetail({ listing }: Props) {
               <h2 className="font-semibold text-gray-900 mb-3">Practice Areas</h2>
               <div className="flex flex-wrap gap-2">
                 {(listing.areas_of_practice ?? []).map((area) => (<Link key={area} href={`/listings?practice_area=${area}`} className="text-sm bg-brand-indigo/5 hover:bg-brand-indigo/10 text-brand-indigo px-3 py-1.5 rounded-lg font-medium transition-colors">
-                    {PRACTICE_AREAS[area] ?? area}
+                    {area}
                   </Link>))}
               </div>
             </div>)}

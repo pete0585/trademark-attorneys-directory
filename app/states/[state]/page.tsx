@@ -154,7 +154,7 @@ export default async function StatePage({ params }: Props) {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {featured.map((listing) => (
-              <ListingCard key={listing.id} listing={listing} />
+              <ListingCard key={listing.id} attorney={listing} />
             ))}
           </div>
         </section>
