@@ -79,7 +79,6 @@ export async function getFeaturedListings(limit = 6): Promise<TrademarkAttorney[
     .from(TABLE)
     .select('*')
     .eq('is_active', true)
-    .in('plan_tier', ['verified', 'featured'])
     .order('listing_tier_rank', { ascending: false, nullsFirst: false })
     .limit(limit)
   return (data as TrademarkAttorney[]) ?? []
