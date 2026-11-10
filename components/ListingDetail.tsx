@@ -113,7 +113,7 @@ export default function ListingDetail({ listing }: Props) {
                     <Mail className="w-4 h-4 text-brand-indigo shrink-0" aria-label="Email"/>
                     {listing.email}
                   </a>)}
-                {listing.website && (<a href={listing.website.startsWith('http') ? listing.website : `https://${listing.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-gray-700 hover:text-brand-indigo transition-colors">
+                {listing.website && (<a data-directory-action="website_click" href={listing.website.startsWith('http') ? listing.website : `https://${listing.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-gray-700 hover:text-brand-indigo transition-colors">
                     <Globe className="w-4 h-4 text-brand-indigo shrink-0" aria-label="Website"/>
                     Visit Website
                   </a>)}
