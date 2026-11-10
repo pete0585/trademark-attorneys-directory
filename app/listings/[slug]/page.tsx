@@ -176,7 +176,7 @@ export default async function ListingDetailPage({ params }: Props) {
                   <Mail className="w-4 h-4 flex-shrink-0"/>
                   <span className="truncate">{attorney.email}</span>
                 </a>)}
-              {attorney.website && (<a href={attorney.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-navy-600 hover:text-navy-500 transition-colors">
+              {attorney.website && (<a data-directory-action="website_click" href={attorney.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-navy-600 hover:text-navy-500 transition-colors">
                   <Globe className="w-4 h-4 flex-shrink-0"/>
                   <span className="truncate">
                     {attorney.website.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]}
@@ -184,7 +184,7 @@ export default async function ListingDetailPage({ params }: Props) {
                 </a>)}
             </div>
 
-            {attorney.website && (<a href={attorney.website} target="_blank" rel="noopener noreferrer" className="mt-4 block w-full text-center bg-navy-600 hover:bg-navy-500 text-white font-semibold py-2.5 rounded-xl transition-colors text-sm">
+            {attorney.website && (<a data-directory-action="website_click" href={attorney.website} target="_blank" rel="noopener noreferrer" className="mt-4 block w-full text-center bg-navy-600 hover:bg-navy-500 text-white font-semibold py-2.5 rounded-xl transition-colors text-sm">
                 Visit Website
               </a>)}
 
