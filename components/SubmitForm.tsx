@@ -17,7 +17,6 @@ const schema = z.object({
     bar_number: z.string().optional(),
     practice_areas: z.array(z.string()).optional(),
     specialties: z.array(z.string()).optional(),
-    free_consultation: z.boolean().optional(),
     accepting_new_clients: z.boolean().optional(),
 });
 type FormData = z.infer<typeof schema>;
@@ -29,7 +28,6 @@ export default function SubmitForm() {
         defaultValues: {
             practice_areas: [],
             specialties: [],
-            free_consultation: false,
             accepting_new_clients: false,
         },
     });
@@ -41,9 +39,9 @@ export default function SubmitForm() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
             });
-            if (!res.ok) {
-                const j = await res.json();
-                throw new Error(j.error ?? 'Submission failed');
+            const j = await res.json();
+            if (!res.ok || j.success !== true || j.status !== 'pending_review') {
+                throw new Error(j.error ?? 'We could not confirm your submission. Your entries have been kept.');
             }
             setSubmitted(true);
         }
@@ -56,7 +54,7 @@ export default function SubmitForm() {
         <CheckCircle className="w-12 h-12 text-brand-sage mx-auto mb-4" aria-label="Success"/>
         <h2 className="text-xl font-bold text-gray-900 mb-2">Listing Submitted!</h2>
         <p className="text-gray-600">
-          Your listing is pending review and will be live within 24 hours. We&apos;ll email you at your provided address when it&apos;s approved.
+          Your submission was saved for review. It is not public yet. No approval time or email delivery is promised.
         </p>
       </div>);
     }
@@ -152,12 +150,8 @@ export default function SubmitForm() {
 
       <div className="flex flex-col gap-3">
         <label className="flex items-center gap-3 cursor-pointer">
-          <input type="checkbox" {...register('free_consultation')} className="w-4 h-4 rounded border-surface-border text-brand-sage focus:ring-brand-sage"/>
-          <span className="text-sm text-gray-700">I offer flat-fee trademark filing packages</span>
-        </label>
-        <label className="flex items-center gap-3 cursor-pointer">
           <input type="checkbox" {...register('accepting_new_clients')} className="w-4 h-4 rounded border-surface-border text-brand-indigo focus:ring-brand-indigo"/>
-          <span className="text-sm text-gray-700">I offer virtual consultations</span>
+          <span className="text-sm text-gray-700">I am accepting new clients</span>
         </label>
       </div>
 
