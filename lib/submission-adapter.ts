@@ -1,0 +1,6 @@
+import { z } from 'zod'
+import { text, optional, email, state, website, phone, list, stableSlug, submissionRoute } from './submission-core'
+import { PRACTICE_AREAS, CREATOR_TYPES } from './utils'
+export const schema=z.object({name:text(160).min(2),firm_name:optional(200),email,phone,website,city:text(100).min(2),state,bio:optional(1000),bar_number:optional(100),practice_areas:list.refine(v=>v.every(x=>Object.prototype.hasOwnProperty.call(PRACTICE_AREAS,x))),specialties:list.refine(v=>v.every(x=>Object.prototype.hasOwnProperty.call(CREATOR_TYPES,x))),accepting_new_clients:z.boolean().default(false)}).strict()
+export function buildRow(d:z.infer<typeof schema>){return {slug:stableSlug(d.name,d.email,d.city,d.state),full_name:d.name,firm_name:d.firm_name,email:d.email,phone:d.phone,website:d.website,city:d.city,state:d.state,bio:d.bio,bar_number:d.bar_number,areas_of_practice:d.practice_areas,specialties:d.specialties,accepting_new_clients:d.accepting_new_clients,practitioner_type:'trademark_attorney',plan_tier:'free',listing_tier:'unclaimed',listing_tier_rank:4,is_active:false,is_approved:false,claimed:false,do_not_email:true,source:'self_submission_pending'}}
+export const POST=submissionRoute(schema,buildRow,{field:'source',value:'self_submission_pending'})
